@@ -8,24 +8,45 @@ Fall 2023
 import glob
 from random import randrange
 from datetime import datetime
+import smtplib
+from email.message import EmailMessage
 
 def main():
-    wkts = readWorkouts()
+    lines = ""
+
     today = datetime.today()
-    print(today)
+    lines += "\n\ndate: %s\n" % (today)
     skiday = datetime(year=2024, month=2, day=4, hour=8)
     countdown = skiday - today
-    print("days until first ski run!!! ", countdown)
-    print()
+    lines += "\ndays until first ski run!!! %s\n\n" % (countdown)
+
+    wkts = readWorkouts()
     n = randrange(len(wkts))
-    print("today's workout (W%d):" % (n+1))
-    print(wkts[n])
-    print()
+    lines += "\ntoday's workout (W%d): \n" % (n+1)
+    for i in range(len(wkts[n])):
+        lines += "%d. %s\n" % (i+1, wkts[n][i].strip())
+    lines += "\n\n"
     quotes = readQuotes()
-    print("today's quote:")
+    lines += "today's quote:\n"
     qnum = randrange(len(quotes))
-    print(quotes[qnum][0])
-    print("\t\t--", quotes[qnum][1])
+    lines += quotes[qnum][0]+"\n"
+    lines += "\t\t-- %s\n\n" % (quotes[qnum][1])
+    subject = "ski workout bingo email for %s" % today
+    sendmail(lines, subject)
+
+def sendmail(lines, subject):
+    """send the lines in an email"""
+    if len(lines) > 0:
+        EMAILTO = readEmails().strip(", ")
+        EMAILFROM = "knerr@cs.swarthmore.edu"
+        msg = EmailMessage()
+        msg.set_content(lines)
+        msg['Subject'] = subject
+        msg['From'] = EMAILFROM
+        msg['To'] = EMAILTO
+        s = smtplib.SMTP('allspice.cs.swarthmore.edu')
+        s.send_message(msg)
+        s.quit()
 
 def readQuotes():
     """read in the witty quotes"""
@@ -47,5 +68,15 @@ def readWorkouts():
         wkts.append(lines)
         inf.close()
     return wkts
+
+def readEmails():
+    """read in the email addresses"""
+    emails = ""
+    inf = open(".emails", "r")
+    for line in inf:
+        email = line.strip()
+        emails += "%s, " % (email)
+    inf.close()
+    return emails
 
 main()
