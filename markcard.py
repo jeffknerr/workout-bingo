@@ -5,10 +5,11 @@ J. Knerr
 Fall 2023
 """
 
-import graphics
 import glob
 from random import choice
 import click
+from workout import *
+from subprocess import getstatusoutput as gso
 
 
 @click.command()
@@ -16,81 +17,67 @@ import click
 @click.option("--cardfile", required=True, help="bingo card state file")
 def main(workout, cardfile):
     # read in workout state file
-    # if given workout is not done in state file,
-    # put an X in the correct spot
-    # update state file and card image
     cardState = readState(cardfile)
+    # find matching workout locations that are not done yet
     locations = check(cardState, workout)
     if len(locations) > 0:
+        # pick one 
         location = choice(locations)
         # update cardState
-        locations[location] = 1
-        # write out new state
-        # write out new card
+        location.setDone()
+        print(location)
+        # write out new state.txt file
+        writeCard(cardState, cardfile)
+        # call imagemagick to mark the card image file
+        magick(location, cardfile)
+
+
+def magick(location, cardfile):
+    """mark the png file at the given location"""
+    x = 60 + 200*location.geti()
+    y = 130 + 200*location.getj()
+    innercom = "text %d,%d 'X'" % (x, y)
+    f1 = "card1.png" 
+    f2 = "output.png"
+    com = 'convert -font helvetica -fill blue -pointsize 100 -draw "%s" %s %s' % (innercom, f1, f2) 
+    status, output = gso(com)
+    print(status, output)
 
 
 def readState(cardfile):
     """given a cardx.txt filename, read in state of card"""
-    return []
+    workouts = []
+    inf = open(cardfile, "r")
+    for line in inf:
+        if not line.startswith("#"):
+            i, j, w, d = line.strip().split(",")
+            w = Workout(int(i), int(j), w, int(d))
+            workouts.append(w)
+    inf.close()
+    return workouts
 
 
 def check(cardState, workout):
-    """see if workout is in the card, return list of locations"""
+    """see if workout is in the card, return list of matching locations"""
     locations = []
+    for w in cardState:
+        if (w.getWorkout() == workout) and w.notDone():
+            locations.append(w)
     return locations
 
 
-def writeCard(cardState):
-    """write out cardState to new image file"""
-    w = 1000
-    h = 1000
-    gw = graphics.GraphWin("bingo card", w, h)
-    gw.setCoords(0, 0, 5, 5)
-    wkts = readWorkouts()
-    for i in range(5):
-        for j in range(5):
-            n = cardState[i][j][2]
-            p = graphics.Point(i+0.5, j+0.5)
-            if i == 2 and j == 2:
-                t = graphics.Text(p, "** FREE **")
-            else:
-                t = graphics.Text(p, "".join(wkts[n]))
-                wnum = "W%d" % (n+1)
-                p = graphics.Point(i+0.5, j+0.85)
-                t2 = graphics.Text(p, wnum)
-                t2.draw(gw)
-            t.draw(gw)
-    drawLines(gw)
-    gw.getKey()
-
-
-def drawLines(gw):
-    """draw the box lines"""
-    W = 3
-    for i in range(6):
-        p1 = graphics.Point(i, 0)
-        p2 = graphics.Point(i, 5)
-        lh = graphics.Line(p1, p2)
-        lh.setWidth(W)
-        lh.draw(gw)
-    for j in range(6):
-        p1 = graphics.Point(0, j)
-        p2 = graphics.Point(5, j)
-        lv = graphics.Line(p1, p2)
-        lv.setWidth(W)
-        lv.draw(gw)
-
-
-def readWorkouts():
-    """read in the workouts"""
-    wkts = []
-    files = glob.glob("w*.txt")
-    for f in files:
-        inf = open(f, "r")
-        lines = inf.readlines()
-        wkts.append(lines)
-        inf.close()
-    return wkts
+def writeCard(cardState, cardfile):
+    """write out cardState to new txt file"""
+    inf = open("new"+cardfile, "w")
+    header = "#i,j,workout,done(1)/not(0)"
+    inf.write(header + "\n")
+    for workout in cardState:
+        i = workout.geti()
+        j = workout.getj()
+        w = workout.getWorkout()
+        d = workout.getDone()
+        inf.write("%s,%s,%s,%s\n" % (str(i), str(j), str(w), str(d)))
+    inf.close()
 
 
 main()

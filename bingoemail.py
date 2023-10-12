@@ -43,7 +43,9 @@ def sendmail(lines, subject):
         msg.set_content(lines)
         msg['Subject'] = subject
         msg['From'] = EMAILFROM
-        msg['To'] = EMAILTO
+        msg['To'] = EMAILFROM
+        msg['Cc'] = EMAILTO
+        msg['Reply-To'] = EMAILFROM
         s = smtplib.SMTP('allspice.cs.swarthmore.edu')
         s.send_message(msg)
         s.quit()
