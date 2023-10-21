@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 def main():
     wrkts = readFile("card.txt")
     fig = plt.figure()
+    fig.set_size_inches(10, 10)
     gs = fig.add_gridspec(5, 5, hspace=0, wspace=0)
     axs = gs.subplots(sharex=True, sharey=True)
     fig.suptitle('B I N G O  Card')
@@ -25,7 +26,15 @@ def main():
     for n, ax in enumerate(axs):
         print(n)
         print(wrkts[n])
-        ax.text(0.3, 0.45, wrkts[n], size=8)
+        if wrkts[n] == "FREE":
+            x = 0.35
+            y = 0.45
+            textsize = 12
+        else:
+            x = 0.15
+            y = 0.35
+            textsize = 8
+        ax.text(x, y, wrkts[n], size=textsize)
 #   plt.show()
     plt.savefig("card.png")
 
@@ -40,7 +49,9 @@ def readFile(cardfile):
             i, j, w, d = line.strip().split(",")
             if w != "FREE":
                 w = int(w)
-                wkts.append("".join(possible_wkts[w-1]))
+                wstr = "W%d:\n" % w
+                wstr += "".join(possible_wkts[w-1])
+                wkts.append(wstr)
             else:
                 wkts.append("FREE")
     inf.close()
