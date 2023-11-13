@@ -2,16 +2,24 @@
 try making a bingo card with workout data from statefile,
 using matplotlib...
 
+reads card.txt,
+outputs card.png
+
 J. Knerr
 Fall 2023
 """
 
 import glob
+import click
 import matplotlib.pyplot as plt
 
 
-def main():
-    wrkts = readFile("card.txt")
+@click.command()
+@click.option("--path", default="./", help="directory of card.txt file")
+def main(path):
+    if not path.endswith("/"):
+        path += "/"
+    wrkts = readFile(path + "card.txt")
     fig = plt.figure()
     fig.set_size_inches(10, 10)
     gs = fig.add_gridspec(5, 5, hspace=0, wspace=0)
@@ -36,7 +44,7 @@ def main():
             textsize = 8
         ax.text(x, y, wrkts[n], size=textsize)
 #   plt.show()
-    plt.savefig("card.png")
+    plt.savefig(path + "card.png")
 
 
 def readFile(cardfile):

@@ -1,4 +1,5 @@
 """
+newgame.py
 start a new game, set up directories
 
 J. Knerr
@@ -12,20 +13,25 @@ from subprocess import getstatusoutput as gso
 
 
 def main():
-    # read in emails, get current game number
+    # read in player emails
     emails = readEmails()
+    # get last game's number, update for new game
     gamenum = readCurrentGame()
-    # make new game dir
+    # make new game dir (number + 1)
     status, output = gso("mkdir -p games/%d" % gamenum)
     # make email subdirs
     # make card statefile for each email
     # run makecard file for each email/statefile
+    # create .done file for current workout
     for email in emails:
         print(email)
         pdir = "games/%d/%s" % (gamenum, email)
         com = "mkdir -p %s" % (pdir)
         status, output = gso(com)
         newcard(pdir)
+        newcardimage(pdir)
+        newdonefile(pdir)
+        # also send email with url???
 
 
 def newcard(pdir):
@@ -42,6 +48,22 @@ def newcard(pdir):
             outf.write("%d,%d,%s,%d\n" % (i, j, str(wkt), done))
     outf.close()
 
+def newcardimage(pdir):
+    """given a player dir and card.txt file, create their png image file"""
+    com = "python3 makecard.py --path=%s" % pdir
+    print(pdir, com)
+    status, output = gso(com)
+    if status != 0:
+        print("uh oh....")
+        print(status)
+
+def newdonefile(pdir):
+    """given a player dir, make the .done file"""
+    com = "echo 1 > %s/.done" % pdir
+    status, output = gso(com)
+    if status != 0:
+        print("uh oh....")
+        print(status)
 
 def readEmails():
     """read in player emails"""

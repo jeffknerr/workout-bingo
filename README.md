@@ -1,6 +1,27 @@
 # workout-bingo
 silly bingo game to get ready for skiing
 
+# outline
+
+- add email addresses, one per line, to `.emails` file
+- run newgame.py to create new game files and directories
+    - creates dir and card.txt file for each user
+    - calls makecard.py on card.txt file
+    - creates .done file
+    - should also send out "new game" email??? or let cron do that??
+- set up procmail entry to look for [JK Bingo] Subject lines
+    - save to location?
+    - call script on email file
+    - update ".done" file???
+    - check for game over/winner??
+- set up cron job to call pickworkout.py every T/Th/S
+    - picks a random workout
+    - sends an email to each player with workout, url, funny quote, leader board??
+    - updates all .done files
+
+- where do all of these games and cards go? need URLs!
+- run all on CS, then rsync the entire dir to GDE??
+
 # add emails
 Add email addresses, one per line, to `.emails` file.
 

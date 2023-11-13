@@ -37,7 +37,7 @@ def magick(location, cardfile):
     x = 60 + 200*location.geti()
     y = 130 + 200*location.getj()
     innercom = "text %d,%d 'X'" % (x, y)
-    f1 = "card1.png" 
+    f1 = "card.png" 
     f2 = "output.png"
     com = 'convert -font helvetica -fill blue -pointsize 100 -draw "%s" %s %s' % (innercom, f1, f2) 
     status, output = gso(com)
