@@ -7,7 +7,6 @@ Fall 2023
 
 from random import choice
 import click
-import os
 from workout import *
 from subprocess import getstatusoutput as gso
 
@@ -25,7 +24,7 @@ def main(workout, cardfile):
         location = choice(locations)
         # update cardState
         location.setDone()
-#       print(location)
+        print(location)
         # write out new state.txt file
         writeCard(cardState, cardfile)
         # call imagemagick to mark the card image file
@@ -34,19 +33,14 @@ def main(workout, cardfile):
 
 def magick(location, cardfile):
     """mark the png file at the given location"""
-    xoffset = 125+45
-    yoffset = 120+110
-    boxsize = 155
-    x = xoffset + boxsize*location.geti()
-    y = yoffset + boxsize*location.getj()
+    x = 60 + 200*location.geti()
+    y = 130 + 200*location.getj()
     innercom = "text %d,%d 'X'" % (x, y)
     f1 = "card.png"
     f2 = "output.png"
     com = 'convert -font helvetica -fill blue -pointsize 100 -draw "%s" %s %s' % (innercom, f1, f2) 
     status, output = gso(com)
-    if status == 0:
-        os.rename(f2, f1)
-#   print(status, output)
+    print(status, output)
 
 
 def readState(cardfile):
@@ -73,8 +67,7 @@ def check(cardState, workout):
 
 def writeCard(cardState, cardfile):
     """write out cardState to new txt file"""
-    newfile = "newcard.txt"
-    inf = open(newfile, "w")
+    inf = open("new"+cardfile, "w")
     header = "#i,j,workout,done(1)/not(0)"
     inf.write(header + "\n")
     for workout in cardState:
@@ -84,7 +77,6 @@ def writeCard(cardState, cardfile):
         d = workout.getDone()
         inf.write("%s,%s,%s,%s\n" % (str(i), str(j), str(w), str(d)))
     inf.close()
-    os.rename(newfile, cardfile)
 
 
 main()

@@ -9,10 +9,10 @@ Nov 2023
 """
 
 import sys
-from subprocess import getstatusoutput as gso
 import email
 import email.parser
 import os
+from subprocess import getstatusoutput as gso
 
 
 def main():
@@ -37,26 +37,39 @@ def main():
             if e in frm:
                 # get workout
                 w = readCurrentWorkout()
-                if w != None:
+                g = readCurrentGame()
+                if w is not None:
                     # check .done file
-                    alreadyDone = readDone(e)
-                    if not alreadyDone: 
-                        markcard(e, w)
+                    alreadyDone = readDone(e, g)
+                    if not alreadyDone:
+                        markcard(e, w, g)
 
 
-def readDone(e):
+def markcard(e, w, g):
+    """given email and workout, mark that player's card"""
+    # cd to correct dir
+    os.chdir("./games/%s/%s" % (g, e))
+    # run ../../../markcard.py to mark the card.png file
+    com = "python3 ../../../markcard.py --workout %s --cardfile card.txt" % w
+    status, output = gso(com)
+    # set .done to 1
+    outf = open(".done", "w")
+    outf.write("1\n")
+    outf.close()
+    # rsync over to pub_html
+
+
+def readDone(e, g):
     """read in current player (e) done file"""
-    inf = open(".current_game", "r")
-    g = inf.readline().strip()
-    inf.close()
     try:
-        path = "games/%s/%s/.done" % (g,e)
+        path = "games/%s/%s/.done" % (g, e)
         inf = open(path, "r")
         d = inf.readline().strip()
         inf.close()
         return d == 1
     except FileNotFoundError:
         return True
+
 
 def readCurrentWorkout():
     """read in current workout number"""
@@ -67,6 +80,18 @@ def readCurrentWorkout():
         return w
     except FileNotFoundError:
         return None
+
+
+def readCurrentGame():
+    """read in current game number"""
+    try:
+        inf = open(".current_game", "r")
+        g = inf.readline().strip()
+        inf.close()
+        return g
+    except FileNotFoundError:
+        return None
+
 
 def readEmails():
     """read in player emails"""

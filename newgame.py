@@ -6,7 +6,6 @@ J. Knerr
 Fall 2023
 """
 
-import glob
 from random import randrange
 from workout import *
 from subprocess import getstatusoutput as gso
