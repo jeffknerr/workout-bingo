@@ -4,6 +4,8 @@ try making a workout email for use with bingo cards
 - get countdown until ski trip
 - pick random workout
 - pick random quote
+- set all .done to 0
+- send unique emails to all
 
 J. Knerr
 Fall 2023
@@ -35,6 +37,11 @@ def main():
     for i in range(len(wkts[n])):
         lines += "%d. %s\n" % (i+1, wkts[n][i].strip())
     lines += "\n\n"
+    lines += """
+
+*** reply with "done" in subject or message to mark workout as Done! ***
+
+    """
     quotes = readQuotes()
     lines += "today's quote:\n"
     qnum = randrange(len(quotes))
@@ -51,7 +58,7 @@ def sendmail(lines, subject):
         inf = open(".current_game",  "r")
         gamenum = inf.readline().strip()
         inf.close()
-        emails = readEmails().strip(", ")
+        emails = readEmails()
         EMAILFROM = "knerr@cs.swarthmore.edu"
         for EMAILTO in emails:
             url = "\n\nYour current bingo card url:\n"
@@ -67,6 +74,14 @@ def sendmail(lines, subject):
             s = smtplib.SMTP('allspice.cs.swarthmore.edu')
             s.send_message(msg)
             s.quit()
+            setdone(gamenum, EMAILTO)
+
+
+def setdone(gamenum, EMAILTO):
+    """set player's .done file to 0"""
+    outf = open("games/%s/%s/.done" % (gamenum, EMAILTO), "w")
+    outf.write("0\n")
+    outf.close()
 
 
 def readQuotes():
@@ -94,11 +109,11 @@ def readWorkouts():
 
 def readEmails():
     """read in the email addresses"""
-    emails = ""
+    emails = []
     inf = open(".emails", "r")
     for line in inf:
         email = line.strip()
-        emails += "%s, " % (email)
+        emails.append(email)
     inf.close()
     return emails
 
