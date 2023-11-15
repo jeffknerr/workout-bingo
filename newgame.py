@@ -10,6 +10,7 @@ from random import randrange
 from workout import *
 from subprocess import getstatusoutput as gso
 from utils import *
+import os
 
 
 def main():
@@ -19,11 +20,17 @@ def main():
     gamenum = readCurrentGame()
     if gamenum is None:
         gamenum = 1000
-        outf = open(".current_game", "w")
-        outf.write("%d\n" % (gamenum))
-        outf.close()
     else:
         gamenum += 1
+    # write new .current_game file
+    outf = open(".current_game", "w")
+    outf.write("%d\n" % (gamenum))
+    outf.close()
+    # delete .nogame if it exists
+    try:
+        os.remove(".nogame") 
+    except FileNotFoundError:
+        pass
     # make new game dir
     status, output = gso("mkdir -p games/%d" % gamenum)
     # make email subdirs

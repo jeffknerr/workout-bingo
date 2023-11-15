@@ -27,7 +27,7 @@ def readCurrentWorkout():
         inf = open(".current_workout", "r")
         w = str(inf.readline().strip())
         inf.close()
-        return w
+        return int(w)
     except FileNotFoundError:
         return None
 

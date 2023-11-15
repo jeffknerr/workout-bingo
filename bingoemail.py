@@ -17,37 +17,41 @@ from datetime import datetime
 import smtplib
 from email.message import EmailMessage
 from utils import *
+import os
+import sys
 
 
 def main():
+    path = "/home/knerr/repos/workout-bingo"
+    os.chdir(path)
+    if os.path.isfile(".nogame"):
+        print("no game right now...")
+        sys.exit(1)
     lines = ""
 
     today = datetime.today()
     lines += "\n\ndate: %s\n" % (today)
     skiday = datetime(year=2024, month=2, day=4, hour=8)
     countdown = skiday - today
-    lines += "\ndays until first ski run!!! %s\n\n" % (countdown)
+    lines += "\ndays until first ski run!!! %s\n" % (countdown)
 
     wkts = readWorkouts()
     n = randrange(len(wkts))
     # save workout for use in processemail
     outf = open(".current_workout", "w")
-    outf.write("%d\n" % n)
+    outf.write("%d\n" % (n+1))
     outf.close()
     lines += "\ntoday's workout (W%d): \n" % (n+1)
     for i in range(len(wkts[n])):
         lines += "%d. %s\n" % (i+1, wkts[n][i].strip())
-    lines += "\n\n"
-    lines += """
-
-*** reply with "done" in subject or message to mark workout as Done! ***
-
-    """
     quotes = readQuotes()
-    lines += "today's quote:\n"
+    lines += "\ntoday's quote:\n"
     qnum = randrange(len(quotes))
     lines += quotes[qnum][0]+"\n"
     lines += "\t\t-- %s\n\n" % (quotes[qnum][1])
+    lines += """
+*** reply with "done" in subject or message to mark workout as Done! ***
+    """
     subject = "[JK Bingo] ski workout email for %s" % today
     sendmail(lines, subject)
 

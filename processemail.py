@@ -31,6 +31,7 @@ def main():
     frm = msg['From']
 
     # if they replied with done in subject or message text
+    rsynccom = "rsync -av --delete games ~/public_html"
     if ("done" in sub.lower()) or ("done" in text.lower()):
         # starts in ~/mdir
         path = "/home/knerr/repos/workout-bingo"
@@ -48,6 +49,7 @@ def main():
                     if not alreadyDone:
                         markcard(e, w, g)
                         # rsync over to pub_html
+                        status, output = gso(rsynccom)
                         # check for winner/gameover
 
 
@@ -59,9 +61,13 @@ def markcard(e, w, g):
     com = "python3 markcard.py --workout %s --cardfile %s --imgfile %s" % (w, cfile, ifile)
     status, output = gso(com)
     # set .done to 1
-    outf = open(".done", "w")
+    dfile = "./games/%d/%s/.done" % (g, e)
+    outf = open(dfile, "w")
     outf.write("1\n")
     outf.close()
+    os.chmod(dfile, 0o644)
+    os.chmod(cfile, 0o644)
+    os.chmod(ifile, 0o644)
 
 
 def parse_single_body(email):

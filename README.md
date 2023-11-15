@@ -3,17 +3,17 @@ silly bingo game to get ready for skiing
 
 # todo
 
-- check that all current_workouts are the same (not +1 or -1)
-- change procmail recipe to also save a copy to aaa.bingo
+x check that all current_workouts are the same (not +1 or -1)
+x change procmail recipe to also save a copy to aaa.bingo
 - something to determine game over/winner
-- write a utils.py file to pull all common functions into
-- where to put the rsyncs for updated boards?
+x write a utils.py file to pull all common functions into
+x where to put the rsyncs for updated boards?
 - take all cs.swat.edu specific stuff outside of code/git
 - fix up this readme :)
 - set up cron to call bingoemail.py program
-- full game test with test emails
+~ full game test with test emails
 - full game test with beta tester emails
-- .nogame file (cron checks if there's a game currently running)
+x .nogame file (cron checks if there's a game currently running)
 - launch on Dec 1
 
 # outline
@@ -23,14 +23,16 @@ silly bingo game to get ready for skiing
     - creates dir and card.txt file for each user
     - calls makecard.py on card.txt file
     - creates .done file
-    - should also send out "new game" email??? or let cron do that??
+    - cron job below sends email that game is going
+    - removes .nogame file
 - set up procmail entry to look for [JK Bingo] Subject lines
     - save to location?
     - call script on email file
     - update ".done" file???
-    - check for game over/winner??
-- set up cron job to call pickworkout.py every T/Th/S
+    - check for game over/winner?? (if winner, create .nogame file)
+- set up cron job to call bingoemail.py every T/Th/S
     - picks a random workout
+    - updates .current_workout file
     - sends an email to each player with workout, url, funny quote, leader board??
     - updates all .done files
 
