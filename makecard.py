@@ -12,6 +12,7 @@ Fall 2023
 import glob
 import click
 import matplotlib.pyplot as plt
+from utils import *
 
 
 @click.command()
@@ -65,17 +66,6 @@ def readFile(cardfile):
     inf.close()
     return wkts
 
-
-def readWorkouts():
-    """read in the workouts"""
-    wkts = []
-    files = glob.glob("w*.txt")
-    for f in files:
-        inf = open(f, "r")
-        lines = inf.readlines()
-        wkts.append(lines)
-        inf.close()
-    return wkts
 
 
 main()

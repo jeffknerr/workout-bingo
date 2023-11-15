@@ -4,14 +4,16 @@ silly bingo game to get ready for skiing
 # todo
 
 - check that all current_workouts are the same (not +1 or -1)
-- change procmai recipe to also save a copy to aaa.bingo
+- change procmail recipe to also save a copy to aaa.bingo
 - something to determine game over/winner
+- write a utils.py file to pull all common functions into
 - where to put the rsyncs for updated boards?
 - take all cs.swat.edu specific stuff outside of code/git
 - fix up this readme :)
 - set up cron to call bingoemail.py program
 - full game test with test emails
 - full game test with beta tester emails
+- .nogame file (cron checks if there's a game currently running)
 - launch on Dec 1
 
 # outline

@@ -16,6 +16,7 @@ from random import randrange
 from datetime import datetime
 import smtplib
 from email.message import EmailMessage
+from utils import *
 
 
 def main():
@@ -83,39 +84,6 @@ def setdone(gamenum, EMAILTO):
     outf.write("0\n")
     outf.close()
 
-
-def readQuotes():
-    """read in the witty quotes"""
-    qts = []
-    inf = open("quotes.txt", "r")
-    for line in inf:
-        quote, who = line.strip().split("#")
-        qts.append([quote, who])
-    inf.close()
-    return qts
-
-
-def readWorkouts():
-    """read in the workouts"""
-    wkts = []
-    files = glob.glob("w*.txt")
-    for f in files:
-        inf = open(f, "r")
-        lines = inf.readlines()
-        wkts.append(lines)
-        inf.close()
-    return wkts
-
-
-def readEmails():
-    """read in the email addresses"""
-    emails = []
-    inf = open(".emails", "r")
-    for line in inf:
-        email = line.strip()
-        emails.append(email)
-    inf.close()
-    return emails
 
 
 main()

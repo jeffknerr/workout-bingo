@@ -15,7 +15,8 @@ from subprocess import getstatusoutput as gso
 @click.command()
 @click.option("--workout", required=True, help="workout to mark done")
 @click.option("--cardfile", required=True, help="bingo card state file")
-def main(workout, cardfile):
+@click.option("--imgfile", required=True, help="bingo card image file")
+def main(workout, cardfile, imgfile):
     # read in workout state file
     cardState = readState(cardfile)
     # find matching workout locations that are not done yet
@@ -29,10 +30,10 @@ def main(workout, cardfile):
         # write out new state.txt file
         writeCard(cardState, cardfile)
         # call imagemagick to mark the card image file
-        magick(location, cardfile)
+        magick(location, cardfile, imgfile)
 
 
-def magick(location, cardfile):
+def magick(location, cardfile, imgfile):
     """mark the png file at the given location"""
     xoffset = 125+45
     yoffset = 120+110
@@ -40,7 +41,7 @@ def magick(location, cardfile):
     x = xoffset + boxsize*location.geti()
     y = yoffset + boxsize*location.getj()
     innercom = "text %d,%d 'X'" % (x, y)
-    f1 = "card.png"
+    f1 = imgfile
     f2 = "output.png"
     com = 'convert -font helvetica -fill blue -pointsize 100 -draw "%s" %s %s' % (innercom, f1, f2) 
     status, output = gso(com)
