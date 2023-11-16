@@ -15,6 +15,7 @@ import email.parser
 import os
 from subprocess import getstatusoutput as gso
 from utils import *
+from pathlib import Path
 
 
 def main():
@@ -51,6 +52,55 @@ def main():
                         # rsync over to pub_html
                         status, output = gso(rsynccom)
                         # check for winner/gameover
+                        if checkwinner(e, g):
+                            # touch .nogame file
+                            Path(".nogame").touch()
+                            # email all that game is over
+                            return
+
+
+def checkwinner(e, g):
+    """check if game over/someone has won"""
+    # read in e's card.txt file
+    cardfile = "./games/%d/%s/card.txt" % (g, e)
+    cardState = readState(cardfile)
+    # cardState is list of Workout objects
+    # first 5 are j=0, next 5 are j=1, next 5 are j=2, etc
+    # check all of the options (rows, cols, diags)
+    # if any are all 1's, set gameover to True
+    # first check the rows
+    for j in range(5):
+        counter = 0
+        for i in range(5):
+            k = i + j
+            if cardState[k].isDone():
+                counter += 1
+        if counter == 5:
+            return True
+    # now check the columns
+    for i in range(5):
+        counter = 0
+        for j in range(5):
+            k = (j*5) + i
+            if cardState[k].isDone():
+                counter += 1
+        if counter == 5:
+            return True
+    # last check the diagonals
+    counter = 0
+    for k in [0, 6, 12, 18, 24]:
+        if cardState[k].isDone():
+            counter += 1
+    if counter == 5:
+        return True
+    counter = 0
+    for k in [20, 16, 12, 8, 4]:
+        if cardState[k].isDone():
+            counter += 1
+    if counter == 5:
+        return True
+    # if we get here, game is not over yet    
+    return False
 
 
 def markcard(e, w, g):

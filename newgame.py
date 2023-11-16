@@ -82,19 +82,6 @@ def newdonefile(pdir):
         print(status)
 
 
-def readState(cardfile):
-    """given a card.txt filename, read in state of card"""
-    workouts = []
-    inf = open(cardfile, "r")
-    for line in inf:
-        if not line.startswith("#"):
-            i, j, w, d = line.strip().split(",")
-            w = Workout(int(i), int(j), w, int(d))
-            workouts.append(w)
-    inf.close()
-    return workouts
-
-
 def check(cardState, workout):
     """see if workout is in the card, return list of matching locations"""
     locations = []

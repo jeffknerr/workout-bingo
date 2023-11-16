@@ -10,6 +10,7 @@ import click
 import os
 from workout import *
 from subprocess import getstatusoutput as gso
+from utils import *
 
 
 @click.command()
@@ -48,19 +49,6 @@ def magick(location, cardfile, imgfile):
     if status == 0:
         os.rename(f2, f1)
 #   print(status, output)
-
-
-def readState(cardfile):
-    """given a cardx.txt filename, read in state of card"""
-    workouts = []
-    inf = open(cardfile, "r")
-    for line in inf:
-        if not line.startswith("#"):
-            i, j, w, d = line.strip().split(",")
-            w = Workout(int(i), int(j), w, int(d))
-            workouts.append(w)
-    inf.close()
-    return workouts
 
 
 def check(cardState, workout):

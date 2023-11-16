@@ -9,7 +9,9 @@ x change procmail recipe to also save a copy to aaa.bingo
 x write a utils.py file to pull all common functions into
 x where to put the rsyncs for updated boards?
 - take all cs.swat.edu specific stuff outside of code/git
-- fix up this readme :)
+- fix up this readme :) 
+    - add cron entry
+    - add procmail setup
 - set up cron to call bingoemail.py program
 ~ full game test with test emails
 - full game test with beta tester emails

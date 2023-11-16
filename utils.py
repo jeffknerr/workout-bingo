@@ -9,6 +9,19 @@ Nov 2023
 import glob
 
 
+def readState(cardfile):
+    """given a card.txt filename, read in state of card"""
+    workouts = []
+    inf = open(cardfile, "r")
+    for line in inf:
+        if not line.startswith("#"):
+            i, j, w, d = line.strip().split(",")
+            w = Workout(int(i), int(j), w, int(d))
+            workouts.append(w)
+    inf.close()
+    return workouts
+
+
 def readDone(e, g):
     """read in current player (e) done file for game g"""
     try:
