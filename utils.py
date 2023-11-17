@@ -7,6 +7,7 @@ Nov 2023
 """
 
 import glob
+from workout import *
 
 
 def readState(cardfile):
@@ -29,7 +30,7 @@ def readDone(e, g):
         inf = open(path, "r")
         d = inf.readline().strip()
         inf.close()
-        return d == 1
+        return d == "1"
     except FileNotFoundError:
         return True
 

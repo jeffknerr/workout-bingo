@@ -16,6 +16,7 @@ import os
 from subprocess import getstatusoutput as gso
 from utils import *
 from pathlib import Path
+from workout import *
 
 
 def main():
