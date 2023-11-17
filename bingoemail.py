@@ -89,5 +89,4 @@ def setdone(gamenum, EMAILTO):
     outf.close()
 
 
-
 main()

@@ -6,19 +6,19 @@ silly bingo game to get ready for skiing
 x check that all current_workouts are the same (not +1 or -1)
 x change procmail recipe to also save a copy to aaa.bingo
 x something to determine game over/winner
-- email all players when game is over
+x email all players when game is over
 x write a utils.py file to pull all common functions into
 x where to put the rsyncs for updated boards?
 - take all cs.swat.edu specific stuff outside of code/git
 - fix up this readme :) 
-    - add cron entry
-    - add procmail setup
+    x add cron entry
+    x add procmail setup
 x set up cron to call bingoemail.py program
-~ full game test with test emails
+x full game test with test emails
 - full game test with beta tester emails
 x .nogame file (cron checks if there's a game currently running)
 - launch on Dec 1
-- put index.html file in games dir
+x put index.html file in games dir
 
 
 # outline
@@ -41,9 +41,6 @@ x .nogame file (cron checks if there's a game currently running)
     - sends an email to each player with workout, url, funny quote, leader board??
     - updates all .done files
 
-- where do all of these games and cards go? need URLs!
-- run all on CS, then rsync the entire dir to GDE??
-
 # add emails
 Add email addresses, one per line, to `.emails` file.
 
@@ -61,4 +58,25 @@ convert -font helvetica -fill blue -pointsize 100 -draw "text 60,330 'O'" card1.
 convert -font helvetica -fill blue -pointsize 100 -draw "text 60,530 'O'" card1.png output.png
 convert -font helvetica -fill blue -pointsize 100 -draw "text 260,530 'O'" card1.png output.png
 convert -font helvetica -fill blue -pointsize 100 -draw "text 460,530 'O'" card1.png output.png
+```
+
+# cron entry
+
+```
+# bingo game at 8am, Tue/Thu/Sat
+0 8 * * 2,4,6 python3 ~/repos/workout-bingo/bingoemail.py
+```
+
+# procmail entry
+
+```
+:0:
+* ^Subject: Re: \[JK Bingo\] .*$
+{
+  :0 c
+  aaa.IN.bingo
+
+  :0
+  | $HOME/repos/workout-bingo/processemail.py
+}
 ```

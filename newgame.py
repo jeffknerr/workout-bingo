@@ -37,6 +37,8 @@ def main():
     # make card statefile for each email
     # run makecard file for each email/statefile
     # create .done file for current workout
+    # also make index.html file for game directory
+    html = ""
     for email in emails:
         print(email)
         pdir = "games/%d/%s" % (gamenum, email)
@@ -45,7 +47,15 @@ def main():
         newcard(pdir)
         newcardimage(pdir)
         newdonefile(pdir)
-        # also send email with url???
+        html += """
+<li>%s
+<img src="https://www.cs.swarthmore.edu/~knerr/games/%d/%s/card.png">
+</li>
+        """ % (email, gamenum, email)
+    writeIndex(html, gamenum)
+    # rsync everything to pub_html dir
+    rsynccom = "rsync -av --delete games ~/public_html"
+    status, output = gso(rsynccom)
 
 
 def newcard(pdir):
@@ -103,6 +113,36 @@ def writeCard(cardState, cardfile):
         d = workout.getDone()
         inf.write("%s,%s,%s,%s\n" % (str(i), str(j), str(w), str(d)))
     inf.close()
+
+
+def writeIndex(html, gamenum):
+    """write the index.html file for this game"""
+    contents = """
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+			"http://www.w3.org/TR/1998/REC-html40-19980424/strict.dtd">
+<html lang="en">
+<head>
+<title> 
+	bingo game %d
+</title> 
+<style>
+body {background-color: #dddddd; }
+</style>
+</head>
+
+<body>
+
+<ul>
+%s
+</ul>
+
+</body>
+</html>
+    """ % (gamenum, html)
+    ifile = "games/%d/index.html" % gamenum
+    outf = open(ifile, "w")
+    outf.write(contents)
+    outf.close()
 
 
 main()

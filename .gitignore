@@ -1,6 +1,7 @@
 #
 # custom local game stuff to ignore
 .emails
+.nogame
 .allemails
 .current_game
 .current_workout
