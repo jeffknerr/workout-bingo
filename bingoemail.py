@@ -50,7 +50,7 @@ def main():
     lines += quotes[qnum][0]+"\n"
     lines += "\t\t-- %s\n\n" % (quotes[qnum][1])
     lines += """
-*** reply with "done" in subject or message to mark workout as Done! ***
+*** reply and add "done" to the subject or message to mark workout as Done! ***
     """
     subject = "[JK Bingo] ski workout email for %s" % today
     sendmail(lines, subject)

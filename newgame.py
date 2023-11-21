@@ -48,9 +48,9 @@ def main():
         newcardimage(pdir)
         newdonefile(pdir)
         html += """
-<li>%s
+<li>%s </li>
 <img src="https://www.cs.swarthmore.edu/~knerr/games/%d/%s/card.png">
-</li>
+<hr>
         """ % (email, gamenum, email)
     writeIndex(html, gamenum)
     # rsync everything to pub_html dir
