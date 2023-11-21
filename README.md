@@ -22,6 +22,8 @@ Scripts also do the following:
 - uses imagemagick to put "X" on given bingo card image file
 - emails all once a player has won the game
 - can set up a new game, given a file with a list of player emails
+- uses matplotlib to create the initial bingo card image files
+
 
 ## setup
 
@@ -53,36 +55,27 @@ PREFIX = [YourProcmailPrefix]
 - add to/change quotes file if you want
 - assumes START/public_html exists
 
-# add emails
-Add email addresses, one per line, to `.emails` file.
-
-# add mark to image
+## add mark to image
 
 See `markcard.py` for details on how imagemagick marks a card
 at a specific location (e.g., i=2 (the column) and j=3 (the row)).
-
-Using the following font and point size, it appears the
-"center" of the top right square is `x=60` and `y=130`.
-So the first `convert` command below (from imagemagick) is for the
-top left square, then next down one, down two, down two over one,
-and finally down two (530) over two (460).
 
 Here's a simple example of running `convert` from the command line,
 to put an "X" at a specific location (e.g., 60,130):
 
 ```
-convert -font helvetica -fill blue -pointsize 100 -draw "text 60,130 'X'" card1.png output.png
-convert -font helvetica -fill blue -pointsize 100 -draw "text 60,330 'X'" card1.png output.png
+convert -font helvetica -fill blue -pointsize 100 -draw "text 60,130 'X'" card.png output.png
+convert -font helvetica -fill blue -pointsize 100 -draw "text 60,330 'X'" card.png output.png
 ```
 
-# cron entry
+## cron entry
 
 ```
 # bingo game at 8am, Tue/Thu/Sat
 0 8 * * 2,4,6 python3 ~/repos/workout-bingo/bingoemail.py
 ```
 
-# procmail entry
+## procmail entry
 
 ```
 :0:
