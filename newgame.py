@@ -14,6 +14,9 @@ import os
 
 
 def main():
+    # read in variables
+    variables = readVars()
+    START = variables["START"]
     # read in player emails
     emails = readEmails()
     # get last game's number, update for new game
@@ -49,9 +52,9 @@ def main():
         newdonefile(pdir)
         html += """
 <li>%s </li>
-<img src="https://www.cs.swarthmore.edu/~knerr/games/%d/%s/card.png">
+<img src="%s/games/%d/%s/card.png">
 <hr>
-        """ % (email, gamenum, email)
+        """ % (email, START, gamenum, email)
     writeIndex(html, gamenum)
     # rsync everything to pub_html dir
     rsynccom = "rsync -av --delete games ~/public_html"

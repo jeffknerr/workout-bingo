@@ -19,6 +19,7 @@ x full game test with test emails
 x .nogame file (cron checks if there's a game currently running)
 - launch on Dec 1
 x put index.html file in games dir
+- assumes START/public_html exists
 
 
 # outline

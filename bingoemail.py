@@ -22,8 +22,13 @@ import sys
 
 
 def main():
-    path = "/home/knerr/repos/workout-bingo"
-    os.chdir(path)
+    variables = readVars()
+    PATH = variables["PATH"]
+    PREFIX = variables["PREFIX"]
+    START = variables["START"]
+    EMAILFROM = variables["EMAILFROM"]
+    SERVER = variables["SERVER"]
+    os.chdir(PATH)
     if os.path.isfile(".nogame"):
         print("no game right now...")
         sys.exit(1)
@@ -52,19 +57,17 @@ def main():
     lines += """
 *** reply and add "done" to the subject or message to mark workout as Done! ***
     """
-    subject = "[JK Bingo] ski workout email for %s" % today
-    sendmail(lines, subject)
+    subject = PREFIX + ("ski workout email for %s" % today)
+    sendmail(lines, subject, START, EMAILFROM, SERVER)
 
 
-def sendmail(lines, subject):
+def sendmail(lines, subject, START, EMAILFROM, SERVER):
     """send the lines in an email"""
     if len(lines) > 0:
-        START = "https://www.cs.swarthmore.edu/~knerr"
         inf = open(".current_game",  "r")
         gamenum = inf.readline().strip()
         inf.close()
         emails = readEmails()
-        EMAILFROM = "knerr@cs.swarthmore.edu"
         for EMAILTO in emails:
             url = "\n\nYour current bingo card url:\n"
             url += "%s/games/%s/%s/card.png\n\n" % (START, gamenum, EMAILTO)
@@ -76,7 +79,7 @@ def sendmail(lines, subject):
             msg['To'] = EMAILTO
 #           msg['Cc'] = EMAILTO
             msg['Reply-To'] = EMAILFROM
-            s = smtplib.SMTP('allspice.cs.swarthmore.edu')
+            s = smtplib.SMTP(SERVER)
             s.send_message(msg)
             s.quit()
             setdone(gamenum, EMAILTO)

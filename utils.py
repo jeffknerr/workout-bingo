@@ -12,6 +12,23 @@ import smtplib
 from email.message import EmailMessage
 
 
+def readVars():
+    """read site variables from file"""
+    variables = {}
+    try:
+        inf = open(".variables", "r")
+        for line in inf:
+            if not line.startswith("#"):
+                data = line.strip().split()
+                key = data[0]
+                value = data[2].strip('"')
+                variables[key] = value
+        inf.close()
+    except FileNotFoundError:
+        print("Need to create .variables file...")
+        return None
+    return variables
+
 def checkwinner(e, g):
     """check if game over/someone has won"""
     # read in e's card.txt file
@@ -143,11 +160,13 @@ def readWorkouts():
 def emailgameover(e, g):
     """email all that game is over"""
     imgfile = "./games/%d/%s/card.png" % (int(g), e)
-    START = "https://www.cs.swarthmore.edu/~knerr"
+    variables = readVars()
+    START = variables["START"]
+    EMAILFROM = variables["EMAILFROM"]
+    SERVER = variables["SERVER"]
     url = "%s/games/%s/%s/card.png\n" % (START, g, e)
     index = "%s/games/%s\n" % (START, g)
     emails = readEmails()
-    EMAILFROM = "knerr@cs.swarthmore.edu"
     lines = """
   We have a winner!!!!
   >>>> %s <<<<
@@ -167,7 +186,7 @@ def emailgameover(e, g):
     msg['From'] = EMAILFROM
     msg['To'] = EMAILTO
     msg['Reply-To'] = EMAILFROM
-    s = smtplib.SMTP('allspice.cs.swarthmore.edu')
+    s = smtplib.SMTP(SERVER)
     s.send_message(msg)
     s.quit()
 
@@ -189,6 +208,8 @@ def main():
     result = checkwinner(emails[0], g)
     print(result)
     emailgameover(emails[0], g)
+    result = readVars()
+    print(result)
 
 
 if __name__ == "__main__":

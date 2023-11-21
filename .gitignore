@@ -5,6 +5,7 @@
 .allemails
 .current_game
 .current_workout
+.variables
 games/
 
 # Byte-compiled / optimized / DLL files
