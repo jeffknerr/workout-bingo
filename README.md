@@ -1,51 +1,65 @@
 # workout-bingo
 silly bingo game to get ready for skiing
 
-# todo
+This repo contains scripts I use to set up a fun workout bingo game.
 
-x check that all current_workouts are the same (not +1 or -1)
-x change procmail recipe to also save a copy to aaa.bingo
-x something to determine game over/winner
-x email all players when game is over
-x write a utils.py file to pull all common functions into
-x where to put the rsyncs for updated boards?
-- take all cs.swat.edu specific stuff outside of code/git
-- fix up this readme :) 
-    x add cron entry
-    x add procmail setup
-x set up cron to call bingoemail.py program
-x full game test with test emails
-- full game test with beta tester emails
-x .nogame file (cron checks if there's a game currently running)
-- launch on Dec 1
-x put index.html file in games dir
-- assumes START/public_html exists
+Every Tuesday, Thursday, and Saturday my script (`bingoemail.py`)
+picks a random workout and sends it to each player. 
+Players have until the next workout
+email to *do* the workout and reply "done" to the email. I have
+`procmail` looking for "done" emails, and if they
+reply done in time, and their bingo card has the workout, it
+puts an "X" on their bingo card. Normal bing rules apply (first to
+get 5 marks horizontal, vertical, or diagonal, wins).
 
+Here's an example of the workout bingo card:
 
-# outline
+![](bingocard.png)
+
+Scripts also do the following:
+- parse incoming emails, looking for "done"
+- create bingo card image file given a "state" file (says which squares are already "done")
+- uses imagemagick to put "X" on given bingo card image file
+- emails all once a player has won the game
+- can set up a new game, given a file with a list of player emails
+
+## setup
 
 - add email addresses, one per line, to `.emails` file
+- create `.variables` file with site-specific variables, like this:
+```
+$ vim .variables
+$ cat .variables
+# start of URL for games
+START = https://yourserver/~yourusername
+# who the game emails come from
+EMAILFROM = youremail@yourdomain
+# email server used to send the bingo emails
+SERVER = your.email.server.fqdn
+# path to workout-bingo dir
+PATH = /home/yourusername/repos/workout-bingo
+# prefix for email subject lines
+PREFIX = [YourProcmailPrefix]
+```
+
 - run newgame.py to create new game files and directories
     - creates dir and card.txt file for each user
     - calls makecard.py on card.txt file
     - creates .done file
     - cron job below sends email that game is going
-    - removes .nogame file
-- set up procmail entry to look for [JK Bingo] Subject lines
-    - save to location?
-    - call script on email file
-    - update ".done" file???
-    - check for game over/winner?? (if winner, create .nogame file)
-- set up cron job to call bingoemail.py every T/Th/S
-    - picks a random workout
-    - updates .current_workout file
-    - sends an email to each player with workout, url, funny quote, leader board??
-    - updates all .done files
+    - removes .nogame file (leftover from last game)
+- set up procmail entry to look for [YourProcmailPrefix] Subject lines
+- set up cron job to call `bingoemail.py` every T/Th/S
+- add to/change quotes file if you want
+- assumes START/public_html exists
 
 # add emails
 Add email addresses, one per line, to `.emails` file.
 
 # add mark to image
+
+See `markcard.py` for details on how imagemagick marks a card
+at a specific location (e.g., i=2 (the column) and j=3 (the row)).
 
 Using the following font and point size, it appears the
 "center" of the top right square is `x=60` and `y=130`.
@@ -53,12 +67,12 @@ So the first `convert` command below (from imagemagick) is for the
 top left square, then next down one, down two, down two over one,
 and finally down two (530) over two (460).
 
+Here's a simple example of running `convert` from the command line,
+to put an "X" at a specific location (e.g., 60,130):
+
 ```
-convert -font helvetica -fill blue -pointsize 100 -draw "text 60,130 'O'" card1.png output.png
-convert -font helvetica -fill blue -pointsize 100 -draw "text 60,330 'O'" card1.png output.png
-convert -font helvetica -fill blue -pointsize 100 -draw "text 60,530 'O'" card1.png output.png
-convert -font helvetica -fill blue -pointsize 100 -draw "text 260,530 'O'" card1.png output.png
-convert -font helvetica -fill blue -pointsize 100 -draw "text 460,530 'O'" card1.png output.png
+convert -font helvetica -fill blue -pointsize 100 -draw "text 60,130 'X'" card1.png output.png
+convert -font helvetica -fill blue -pointsize 100 -draw "text 60,330 'X'" card1.png output.png
 ```
 
 # cron entry
@@ -72,7 +86,7 @@ convert -font helvetica -fill blue -pointsize 100 -draw "text 460,530 'O'" card1
 
 ```
 :0:
-* ^Subject: Re: \[JK Bingo\] .*$
+* ^Subject: Re: \[YourProcmailPrefix\] .*$
 {
   :0 c
   aaa.IN.bingo

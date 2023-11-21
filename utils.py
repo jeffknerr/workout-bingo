@@ -19,9 +19,9 @@ def readVars():
         inf = open(".variables", "r")
         for line in inf:
             if not line.startswith("#"):
-                data = line.strip().split()
-                key = data[0]
-                value = data[2].strip('"')
+                data = line.strip().split("=")
+                key = data[0].strip()
+                value = data[1].strip()
                 variables[key] = value
         inf.close()
     except FileNotFoundError:
@@ -205,9 +205,10 @@ def main():
     print(workouts[0])
     quotes = readQuotes()
     print(quotes[0])
-    result = checkwinner(emails[0], g)
-    print(result)
-    emailgameover(emails[0], g)
+    gameover = checkwinner(emails[0], g)
+    print(gameover)
+#   if gameover:
+#       emailgameover(emails[0], g)
     result = readVars()
     print(result)
 

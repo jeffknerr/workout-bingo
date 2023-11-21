@@ -57,7 +57,7 @@ def main():
     lines += """
 *** reply and add "done" to the subject or message to mark workout as Done! ***
     """
-    subject = PREFIX + ("ski workout email for %s" % today)
+    subject = PREFIX + " " + ("ski workout email for %s" % today)
     sendmail(lines, subject, START, EMAILFROM, SERVER)
 
 
