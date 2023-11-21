@@ -23,7 +23,12 @@ Scripts also do the following:
 - emails all once a player has won the game
 - can set up a new game, given a file with a list of player emails
 - uses matplotlib to create the initial bingo card image files
+- pulls random quote from file, adds to emails
+- has "countdown" timer to motivate the players
 
+Here's an example of the email each player gets:
+
+![](emailexample.png)
 
 ## setup
 
@@ -44,6 +49,7 @@ PATH = /home/yourusername/repos/workout-bingo
 PREFIX = [YourProcmailPrefix]
 ```
 
+- edit `bingoemail.py`, change `skiday` variable to match your ski trip day
 - run newgame.py to create new game files and directories
     - creates dir and card.txt file for each user
     - calls makecard.py on card.txt file
