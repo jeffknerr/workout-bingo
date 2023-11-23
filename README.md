@@ -94,3 +94,7 @@ convert -font helvetica -fill blue -pointsize 100 -draw "text 60,330 'X'" card.p
   | $HOME/repos/workout-bingo/processemail.py
 }
 ```
+
+## todo
+
+- fix processemail PATH problem

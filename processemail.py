@@ -36,8 +36,10 @@ def main():
     rsynccom = "rsync -av --delete games ~/public_html"
     if ("done" in sub.lower()) or ("done" in text.lower()):
         # starts in ~/mdir
-        variables = readVars()
-        PATH = variables["PATH"]
+#       variables = readVars()
+#       PATH = variables["PATH"]
+# bug: can't read vars to get PATh until we know PATH
+        PATH = '/home/knerr/repos/workout-bingo'
         os.chdir(PATH)
         # if it's from a valid player
         emails = readEmails()
