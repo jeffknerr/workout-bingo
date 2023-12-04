@@ -11,12 +11,13 @@ from workout import *
 import smtplib
 from email.message import EmailMessage
 
+VPATH="/home/knerr/repos/workout-bingo/"
 
 def readVars():
     """read site variables from file"""
     variables = {}
     try:
-        inf = open(".variables", "r")
+        inf = open(VPATH + ".variables", "r")
         for line in inf:
             if not line.startswith("#"):
                 data = line.strip().split("=")

@@ -1,6 +1,8 @@
 # workout-bingo
 silly bingo game to get ready for skiing
 
+![](skiing.jpg)
+
 This repo contains scripts I use to set up a fun workout bingo game.
 
 Every Tuesday, Thursday, and Saturday my script (`bingoemail.py`)
@@ -98,3 +100,4 @@ convert -font helvetica -fill blue -pointsize 100 -draw "text 60,330 'X'" card.p
 ## todo
 
 - fix processemail PATH problem
+- fix utils VPATH problem

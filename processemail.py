@@ -38,7 +38,7 @@ def main():
         # starts in ~/mdir
 #       variables = readVars()
 #       PATH = variables["PATH"]
-# bug: can't read vars to get PATh until we know PATH
+# bug: can't read vars to get PATH until we know PATH
         PATH = '/home/knerr/repos/workout-bingo'
         os.chdir(PATH)
         # if it's from a valid player
