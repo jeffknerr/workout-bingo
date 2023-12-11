@@ -84,6 +84,12 @@ def newcardimage(pdir):
     if status != 0:
         print("uh oh....")
         print(status)
+    # now put X on the center free spot
+    com = "python3 markspot.py --i 2 --j 2 --imgfile ./%s/card.png" % (pdir)
+    status, output = gso(com)
+    if status != 0:
+        print("uh oh....")
+        print(status)
 
 
 def newdonefile(pdir):

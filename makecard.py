@@ -46,6 +46,7 @@ def main(path):
         ax.text(x, y, wrkts[n], size=textsize)
 #   plt.show()
     plt.savefig(path + "card.png")
+    # also put X on FREE spot??
 
 
 def readFile(cardfile):

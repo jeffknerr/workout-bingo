@@ -101,3 +101,5 @@ convert -font helvetica -fill blue -pointsize 100 -draw "text 60,330 'X'" card.p
 
 - fix processemail PATH problem
 - fix utils VPATH problem
+- fix X on FREE spot
+- change so all cards at least have 1 of each workout??
